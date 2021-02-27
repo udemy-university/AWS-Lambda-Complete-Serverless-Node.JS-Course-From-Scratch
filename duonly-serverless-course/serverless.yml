@@ -1,0 +1,42 @@
+service: duonly-serverless-course
+
+plugins:
+  - serverless-offline
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  stage: dev
+  region: us-east-1
+  environment:
+    JWT_SECRET: ${file(./secrets.json):JWT_SECRET}
+    DB: ${file(./secrets.json):DB}
+
+functions:
+  verify-jwt:
+    handler: authentication/VerifyJWT.verify
+
+  login:
+    handler: authentication/AuthenticationHandler.login
+    events:
+      - http:
+          path: auth/login
+          method: post
+          cors: true
+
+  register:
+    handler: authentication/AuthenticationHandler.register
+    events:
+      - http:
+          path: auth/register
+          method: post
+          cors: true
+
+  myProfile:
+    handler: authentication/AuthenticationHandler.myProfile
+    events:
+      - http:
+          path: auth/myprofile
+          method: post
+          cors: true
+          authorizer: verify-jwt

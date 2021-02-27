@@ -1,0 +1,6 @@
+node_modules
+jspn_packages
+
+.serverless
+
+secrets.json
